@@ -1,0 +1,20 @@
+const typedText=document.getElementById('typedText');
+const phrases=['Computer Science Student','Python Developer','Problem Solver','Future Software Engineer'];
+let pi=0,ci=0,deleting=false;
+function typeLoop(){const p=phrases[pi];typedText.textContent=deleting?p.slice(0,ci--):p.slice(0,ci++);let speed=deleting?42:78;if(!deleting&&ci>p.length){speed=1400;deleting=true}else if(deleting&&ci<0){deleting=false;pi=(pi+1)%phrases.length;ci=0;speed=350}setTimeout(typeLoop,speed)}typeLoop();
+const nav=document.getElementById('nav');document.getElementById('menuBtn').addEventListener('click',()=>nav.classList.toggle('open'));document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const reveals=document.querySelectorAll('.reveal');const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.12});reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%5,4)*70}ms`;io.observe(el)});
+const tiltEls=document.querySelectorAll('.tilt');tiltEls.forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5,max=Number(el.dataset.tilt||8);el.style.transform=`perspective(900px) rotateX(${-y*max}deg) rotateY(${x*max}deg) translateY(-5px)`});el.addEventListener('mouseleave',()=>el.style.transform='')});
+const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');let mx=-100,my=-100,rx=-100,ry=-100;window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});function cursorAnim(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(cursorAnim)}cursorAnim();document.querySelectorAll('a,button,.tilt').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});
+document.querySelectorAll('.magnetic').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.08}px,${(e.clientY-r.top-r.height/2)*.08}px)`});el.addEventListener('mouseleave',()=>el.style.transform='')});
+const modal=document.getElementById('modal'),body=document.getElementById('modalBody');
+const items={
+ ai:{title:'AI Agents for Beginners — Simplilearn SkillUp',src:'assets/certificates/ai-agents-for-beginners.png'},
+ part1:{title:'Programming Fundamentals using Python — Part 1',src:'assets/certificates/python-part-1.png'},
+ part2:{title:'Programming Fundamentals using Python — Part 2',src:'assets/certificates/python-part-2.png'}
+};
+function openModal(key){const x=items[key];if(!x)return;body.innerHTML=`<div class="modal-head"><div><span>CERTIFICATE PREVIEW</span><h3>${x.title}</h3></div></div><div class="modal-image"><img src="${x.src}" alt="${x.title}"></div>`;modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeModal(){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+document.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.open)));document.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',closeModal));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+const topBtn=document.getElementById('topBtn');window.addEventListener('scroll',()=>topBtn.classList.toggle('show',scrollY>500));topBtn.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const sections=[...document.querySelectorAll('main section[id]')],links=[...document.querySelectorAll('.nav a[href^="#"]')];const activeObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-35% 0px -55% 0px'});sections.forEach(s=>activeObs.observe(s));
